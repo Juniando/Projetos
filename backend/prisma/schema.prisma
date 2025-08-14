@@ -11,4 +11,19 @@ model User {
   id    Int     @id @default(autoincrement())
   name  String
   email String  @unique
+  createdAt DateTime @default(now())
+  posts     Post[]
+}
+
+model Post {
+  id Int @id @default(autoincrement())
+  idCreator Int
+  image String?
+  snacks String
+  about String
+  linkRepo String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User @relation(fields: [idCreator], references: [id])
 }
