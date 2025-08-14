@@ -1,19 +1,16 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const userRoutes = require('./routes/routes');
+const userRoutes = require('./routes/userRoutes');
+const postRouter = require('./routes/postRoutes');
 
 
 dotenv.config();
 
 const app = express();
-
 app.use(express.json());
 
-app.get('/api', (req, res) => {
-    res.send('rota /api funcionando')
-})
-
-app.use('/api', userRoutes);
+app.use(userRoutes);
+app.use(postRouter);
 
 
 const PORT = process.env.PORT || 3000
