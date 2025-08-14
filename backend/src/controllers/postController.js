@@ -4,13 +4,13 @@ const prisma = new PrismaClient();
 const createPost = async (req, res) => {
     try {
         
-        const {idCreator, image, snacks, about, linkRepo} = req.body;
+        const {idCreator, image, stacks, about, linkRepo} = req.body;
         
         const post = await prisma.post.create({
             data : {
                 idCreator,
                 image,
-                snacks,
+                stacks,
                 about,
                 linkRepo,
             },
