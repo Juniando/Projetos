@@ -1,3 +1,4 @@
+-- CreateTable
 CREATE TABLE "public"."User" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -7,12 +8,12 @@ CREATE TABLE "public"."User" (
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
 CREATE TABLE "public"."Post" (
-    
     "id" SERIAL NOT NULL,
     "idCreator" INTEGER NOT NULL,
     "image" TEXT,
-    "snacks" TEXT NOT NULL,
+    "stacks" TEXT[],
     "about" TEXT NOT NULL,
     "linkRepo" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -21,6 +22,8 @@ CREATE TABLE "public"."Post" (
     CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
 
+-- AddForeignKey
 ALTER TABLE "public"."Post" ADD CONSTRAINT "Post_idCreator_fkey" FOREIGN KEY ("idCreator") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -19,7 +19,7 @@ model Post {
   id Int @id @default(autoincrement())
   idCreator Int
   image String?
-  snacks String
+  stacks String[]
   about String
   linkRepo String?
   createdAt DateTime @default(now())
