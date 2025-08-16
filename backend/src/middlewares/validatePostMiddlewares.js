@@ -11,7 +11,7 @@ const validatePost = (req, res, next) => {
     }
 
     if (!stacks.every(s => typeof s == 'string')) {
-        return res.status(400).json({èrror : " cada item de stacks precisa ser uma string"});
+        return res.status(400).json({error : " cada item de stacks precisa ser uma string"});
     }
 
     next();
