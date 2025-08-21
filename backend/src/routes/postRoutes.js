@@ -1,12 +1,10 @@
-const express = require('express')
+import express from 'express';
+import {createPost, getAllPosts} from '../controllers/postController.js';
+import validatePost from '../middlewares/validatePostMiddlewares.js';
 
 const postRouter = express.Router();
-
-const {createPost, getAllPosts} = require ('../controllers/postController');
-const validatePost = require('../middlewares/validatePostMiddlewares');
 
 postRouter.post('/createPost', validatePost, createPost);
 postRouter.get('/posts', getAllPosts);
 
-
-module.exports = postRouter;
+export default postRouter;
