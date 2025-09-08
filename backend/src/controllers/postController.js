@@ -1,4 +1,4 @@
-const {PrismaClient} = require('@prisma/client');
+import  { PrismaClient }  from '@prisma/client';
 const prisma = new PrismaClient();
 
 const createPost = async (req, res) => {
@@ -32,7 +32,4 @@ const getAllPosts = async (req, res) => {
 }
 
 
-module.exports = {
-    createPost,
-    getAllPosts
-}
+export {createPost, getAllPosts};
