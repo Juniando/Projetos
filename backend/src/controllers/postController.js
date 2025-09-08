@@ -1,11 +1,9 @@
 import  { PrismaClient }  from '@prisma/client';
 const prisma = new PrismaClient();
 
-const createPost = async (req, res) => {
+export const createPost = async (req, res) => {
     try {
-        
         const {idCreator, image, stacks, about, linkRepo} = req.body;
-        
         const post = await prisma.post.create({
             data : {
                 idCreator,
@@ -21,9 +19,8 @@ const createPost = async (req, res) => {
     }
 }
 
-const getAllPosts = async (req, res) => {
+export const getAllPosts = async (req, res) => {
     try {
-
         const posts = await prisma.post.findMany();
         res.status(200).json(posts);
     } catch (error) {
@@ -31,5 +28,26 @@ const getAllPosts = async (req, res) => {
     }
 }
 
+export const deletePost = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const post = await prisma.post.delete({
+            where : {id : Number(id)}
+        })
+        res.status(200).json({message : "Post Deletado", post});
+    } catch ( error ) {
+        res.status(400).json({error : error.message});
+    }
+}
 
-export {createPost, getAllPosts};
+export const getPost = async (req, res) =>{
+    try {
+        const {id} = req.params;
+        const post = await prisma.post.findUnique({
+            where : { id : Number(id)}
+        })
+        res.status(200).json(post);
+    } catch (error) {
+        res.status(400).json({error : error.message});
+    }
+}
