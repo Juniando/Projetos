@@ -6,7 +6,7 @@ export const createPost = async (req, res) => {
         const {idCreator, image, stacks, about, linkRepo} = req.body;
         const post = await prisma.post.create({
             data : {
-                idCreator, // usar apenas para testes, depois substituir por {idCreator : req.userId} !
+                idCreator : req.userId,
                 image,
                 stacks,
                 about,
@@ -28,19 +28,6 @@ export const getAllPosts = async (req, res) => {
     }
 };
 
-// implementar validações para somente usuarios administradores e o criador do post poder deletar.
-
-export const deletePost = async (req, res) => {
-    try {
-        const {id} = req.params;
-        const post = await prisma.post.delete({
-            where : {id : Number(id)}
-        })
-        res.status(200).json({message : "Post Deletado", post});
-    } catch ( error ) {
-        res.status(400).json({error : error.message});
-    }
-};
 
 export const getPost = async (req, res) =>{
     try {
@@ -62,3 +49,24 @@ export const getMyPosts = async (req, res) => {
         res.status(400).json({error : error.message});
     }
 }
+
+export const deletePost = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const post = await prisma.post.findUnique({
+            where: { id: Number(id) },
+        });
+        if (!post) {
+            return res.status(404).json({ error: "Post não encontrado" });
+        }
+        if (post.idCreator !== req.userId && req.userRole !== "admin") {
+            return res.status(403).json({ error: "Você não tem permissão para deletar este post" });
+        }
+        const deletedPost = await prisma.post.delete({
+            where: { id: Number(id) },
+        });
+        res.status(200).json({ message: "Post deletado", post: deletedPost });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};

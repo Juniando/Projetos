@@ -6,10 +6,16 @@ import  authMiddleware  from '../middlewares/authMiddleware.js';
 const userRouter = express.Router();
 
 
-userRouter.post('/createUser', createUser);
-userRouter.get('/me', authMiddleware, getMe);
-userRouter.post("/create-admin", authMiddleware, adminMiddleware, createAdminUser);
-userRouter.get('/users', authMiddleware, adminMiddleware, getAllUsers);
-userRouter.delete('/deleteUser/:id', authMiddleware, adminMiddleware, deleteUser);
+// rotas públicas
+userRouter.post("/", createUser); // POST /api/users → criar usuário normal
+
+// rotas privadas
+userRouter.get("/me", authMiddleware, getMe); // GET /api/users/me
+
+// apenas admin
+userRouter.post("/admin", authMiddleware, adminMiddleware, createAdminUser); // POST /api/users/admin
+userRouter.get("/", authMiddleware, adminMiddleware, getAllUsers);           // GET /api/users
+userRouter.delete("/:id", authMiddleware, adminMiddleware, deleteUser);      // DELETE /api/users/:id
+
 
 export default userRouter;
