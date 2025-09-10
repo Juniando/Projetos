@@ -14,4 +14,4 @@ const checkPostExists = async (req, res, next) => {
     next();
 }
 
-export default checkPostExists
+export default checkPostExists;
