@@ -1,19 +1,57 @@
 import  { PrismaClient }  from '@prisma/client';
+import bcrypt from "bcrypt";
+
 const prisma = new PrismaClient();
 
 
 export const createUser = async (req, res) => {
     try {
-        const {name, email} = req.body;
-        const user = await prisma.user.create({
-            data: {name, email},
-        });
+        const {name, email, password, role} = req.body;
 
-        res.status(201).json(user)
+        if (!password) return res.status(400).json({error : "Senha Obrigatória"});
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const user = await prisma.user.create({
+            data: {
+
+                name,
+                email,
+                password : hashedPassword,
+                role : "user",
+                
+            },
+        });
+        const { password: _, ...userWithoutPassword } = user;
+        res.status(201).json(userWithoutPassword);
     } catch (error) {
         res.status(400).json({ error : error.message});
     }
 };
+
+export const createAdminUser = async (req,res) => {
+    try { 
+        const {name, email, password} = req.body;
+
+        if (!password) return res.status(400).json({error : "Senha Obrigatória"});
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const admin = await prisma.user.create({
+            data : {
+                name,
+                email,
+                password : hashedPassword,
+                role : "admin",
+            }
+        });
+        const {password: _, ...adminWithoutPassword} = admin;
+        res.status(201).json(adminWithoutPassword);
+    } catch (error) {
+        res.status(400).json({error : error.message});
+    }
+};
+
 
 export const getAllUsers = async (req, res) => {
     try {
@@ -21,6 +59,18 @@ export const getAllUsers = async (req, res) => {
             include : { posts: true },
         });
         res.status(200).json(users);
+    } catch (error) {
+        res.status(400).json({error : error.message});
+    }
+};
+
+export const getMe = async (req, res) => {
+    try {
+        const user = await prisma.user.findUnique(
+            {where : 
+                {id : req.userId},
+                include : posts});
+        if (!user) return res.status(404).json({error : "User não encontrado"});
     } catch (error) {
         res.status(400).json({error : error.message});
     }
@@ -36,4 +86,4 @@ export const deleteUser = async (req, res) => {
     } catch (error) {
         res.status(400).json({error : error.message});
     }
-}
+};

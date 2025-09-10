@@ -6,7 +6,7 @@ export const createPost = async (req, res) => {
         const {idCreator, image, stacks, about, linkRepo} = req.body;
         const post = await prisma.post.create({
             data : {
-                idCreator,
+                idCreator, // usar apenas para testes, depois substituir por {idCreator : req.userId} !
                 image,
                 stacks,
                 about,
@@ -17,7 +17,7 @@ export const createPost = async (req, res) => {
     } catch (error) {
         res.status(400).json({error : error.message});
     }
-}
+};
 
 export const getAllPosts = async (req, res) => {
     try {
@@ -26,7 +26,9 @@ export const getAllPosts = async (req, res) => {
     } catch (error) {
         res.status(400).json({error : error.message});
     }
-}
+};
+
+// implementar validações para somente usuarios administradores e o criador do post poder deletar.
 
 export const deletePost = async (req, res) => {
     try {
@@ -38,7 +40,7 @@ export const deletePost = async (req, res) => {
     } catch ( error ) {
         res.status(400).json({error : error.message});
     }
-}
+};
 
 export const getPost = async (req, res) =>{
     try {
@@ -47,6 +49,15 @@ export const getPost = async (req, res) =>{
             where : { id : Number(id)}
         })
         res.status(200).json(post);
+    } catch (error) {
+        res.status(400).json({error : error.message});
+    }
+};
+
+export const getMyPosts = async (req, res) => {
+    try {
+        const posts = await prisma.post.findMany({where : {idCreator : req.userId}});
+        res.status(200).json(posts);
     } catch (error) {
         res.status(400).json({error : error.message});
     }
