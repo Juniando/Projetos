@@ -20,6 +20,7 @@ model User {
 model Post {
   id Int @id @default(autoincrement())
   idCreator Int
+  title String
   image String?
   stacks String[]
   about String
