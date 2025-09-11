@@ -1,22 +1,39 @@
 import { PrismaClient } from "@prisma/client"
+import bcrypt from "bcrypt";
 const prisma = new PrismaClient()
 
-async function main() {
-  await prisma.user.createMany({
-    data: [
-      {name: "Thiago Silva", email: "thiago1@example.com", password: "senha123"},
-      {name: "Ana Costa", email: "ana2@example.com", password: "senha123"},
-      {name: "Carlos Oliveira", email: "carlos3@example.com", password: "senha123" },
-      {name: "Beatriz Souza", email: "beatriz4@example.com", password: "senha123"},
-      {name: "Eduardo Lima", email: "eduardo5@example.com", password: "senha123"},
-      {name: "Fernanda Rocha", email: "fernanda6@example.com", password: "senha123"},
-      {name: "Gustavo Martins", email: "gustavo7@example.com", password: "senha123"},
-      {name: "Juliana Alves", email: "juliana8@example.com", password: "senha123"},
-      {name: "Lucas Pereira", email: "lucas9@example.com", password: "senha123"},
-      {name: "Mariana Fernandes", email: "mariana10@example.com", password: "senha123"},
-    ],
-  })
 
+
+async function main() {
+  const usersData = [
+    { name: "adminMaster", email: "admin@email.com", password: "admin123", role: "admin" },
+    { name: "Thiago Silva", email: "thiago1@example.com", password: "senha123" },
+    { name: "Ana Costa", email: "ana2@example.com", password: "senha123" },
+    { name: "Carlos Oliveira", email: "carlos3@example.com", password: "senha123" },
+    { name: "Beatriz Souza", email: "beatriz4@example.com", password: "senha123" },
+    { name: "Eduardo Lima", email: "eduardo5@example.com", password: "senha123" },
+    { name: "Fernanda Rocha", email: "fernanda6@example.com", password: "senha123" },
+    { name: "Gustavo Martins", email: "gustavo7@example.com", password: "senha123" },
+    { name: "Juliana Alves", email: "juliana8@example.com", password: "senha123" },
+    { name: "Lucas Pereira", email: "lucas9@example.com", password: "senha123" },
+    { name: "Mariana Fernandes", email: "mariana10@example.com", password: "senha123" },
+  ];
+
+  for (const u of usersData) {
+    const hashedPassword = await bcrypt.hash(u.password, 10);
+    await prisma.user.upsert({
+      where: { email: u.email },
+      update: {},
+      create: {
+        name: u.name,
+        email: u.email,
+        password: hashedPassword,
+        role: u.role || "user",
+      },
+    });
+  }
+
+  
   await prisma.post.createMany({
     data: [
       {
