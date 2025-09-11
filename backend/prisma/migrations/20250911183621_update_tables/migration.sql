@@ -14,6 +14,7 @@ CREATE TABLE "public"."User" (
 CREATE TABLE "public"."Post" (
     "id" SERIAL NOT NULL,
     "idCreator" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
     "image" TEXT,
     "stacks" TEXT[],
     "about" TEXT NOT NULL,

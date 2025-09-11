@@ -1,8 +1,8 @@
 const validatePost = (req, res, next) => {
     
-    const { idCreator, image, stacks, about, linkRepo } = req.body;
+    const { idCreator, title, image, stacks, about, linkRepo } = req.body;
 
-    if (!idCreator || !about) {
+    if (!idCreator || !about || !title) {
         return res.status(400).json({error : "idCreator e about são obrigatorios"});
     }
 
