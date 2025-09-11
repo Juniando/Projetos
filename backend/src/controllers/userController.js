@@ -66,10 +66,15 @@ export const getAllUsers = async (req, res) => {
 
 export const getMe = async (req, res) => {
     try {
-        const user = await prisma.user.findUnique(
-            {where : 
-                {id : req.userId},
-                include : posts});
+        const user = await prisma.user.findUnique({
+            where : {
+                id : req.userId
+            },
+            include : {
+                posts : true,
+            }
+        });
+        res.status(200).json(user);
         if (!user) return res.status(404).json({error : "User não encontrado"});
     } catch (error) {
         res.status(400).json({error : error.message});

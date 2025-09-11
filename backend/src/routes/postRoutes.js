@@ -5,13 +5,15 @@ import checkPostExist from '../middlewares/checkPostExistsMiddleware.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
 const postRouter = express.Router();
 
+// rotas públicas
+postRouter.get("/", getAllPosts);                     // GET /api/posts
+postRouter.get("/:id", checkPostExist, getPost);      // GET /api/posts/:id
 
-// depois de popular o banco, adicionar o authMiddleware.
-postRouter.post('/createPost', validatePost, createPost);
+// rotas privadas
+postRouter.post("/", authMiddleware, validatePost, createPost);     // POST /api/posts
+postRouter.get("/me/mine", authMiddleware, getMyPosts);             // GET /api/posts/me/mine
+postRouter.delete("/:id", authMiddleware, checkPostExist, deletePost); // DELETE /api/posts/:id
 
-postRouter.get('/posts', authMiddleware, getAllPosts);
-postRouter.get('/post/:id',checkPostExist, getPost);
-postRouter.get('/myPosts', authMiddleware, getMyPosts);
-postRouter.delete('/deletePost/:id', authMiddleware,checkPostExist, deletePost);
 
-export default postRouter;
+
+export default postRouter
